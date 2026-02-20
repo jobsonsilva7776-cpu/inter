@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interclasse 2026</title>
+
+<style>
+body{
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+}
+
+header{
+    text-align:center;
+    padding:40px 20px;
+    background: rgba(0,0,0,0.4);
+}
+
+header h1{
+    font-size:40px;
+    margin:0;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.section{
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    transition:0.3s;
+}
+
+.section:hover{
+    transform: translateY(-5px);
+}
+
+h2{
+    margin-top:0;
+}
+
+input{
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    width:60%;
+    margin-right:10px;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.add{
+    background:#00ff88;
+}
+
+.add:hover{
+    background:#00cc6a;
+}
+
+.delete{
+    background:#ff4d4d;
+    color:white;
+}
+
+.delete:hover{
+    background:#cc0000;
+}
+
+table{
+    width:100%;
+    margin-top:20px;
+    border-collapse:collapse;
+    background:white;
+    color:black;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+th, td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+th{
+    background:#00ff88;
+}
+
+tr:hover{
+    background:#f5f5f5;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:rgba(0,0,0,0.5);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏆 Interclasse 2026</h1>
+<p>Organização Oficial dos Jogos</p>
+</header>
+
+<div class="container">
+
+<div class="section">
+<h2>🏀 Basquete</h2>
+<input type="text" id="basqueteInput" placeholder="Nome do participante">
+<button class="add" onclick="adicionar('basquete')">Adicionar</button>
+<table id="basqueteTabela"></table>
+</div>
+
+<div class="section">
+<h2>⚽ Futsal</h2>
+<input type="text" id="futsalInput" placeholder="Nome do participante">
+<button class="add" onclick="adicionar('futsal')">Adicionar</button>
+<table id="futsalTabela"></table>
+</div>
+
+</div>
+
+<footer>
+© 2026 Interclasse - Todos os direitos reservados
+</footer>
+
+<script>
+const esportes = ["basquete","futsal"];
+
+function salvar(esporte, lista){
+    localStorage.setItem(esporte, JSON.stringify(lista));
+}
+
+function carregar(esporte){
+    return JSON.parse(localStorage.getItem(esporte)) || [];
+}
+
+function renderizar(esporte){
+    let tabela = document.getElementById(esporte+"Tabela");
+    tabela.innerHTML = "<tr><th>Nome</th><th>Ação</th></tr>";
+
+    let lista = carregar(esporte);
+
+    lista.forEach((nome, index) => {
+        let linha = tabela.insertRow(-1);
+        linha.insertCell(0).innerHTML = nome;
+        linha.insertCell(1).innerHTML =
+            `<button class='delete' onclick="remover('${esporte}', ${index})">Excluir</button>`;
+    });
+}
+
+function adicionar(esporte){
+    let input = document.getElementById(esporte+"Input");
+    let nome = input.value;
+
+    if(nome === ""){
+        alert("Digite um nome!");
+        return;
+    }
+
+    let lista = carregar(esporte);
+    lista.push(nome);
+    salvar(esporte, lista);
+    input.value = "";
+    renderizar(esporte);
+}
+
+function remover(esporte, index){
+    let lista = carregar(esporte);
+    lista.splice(index,1);
+    salvar(esporte, lista);
+    renderizar(esporte);
+}
+
+window.onload = function(){
+    esportes.forEach(esporte => renderizar(esporte));
+}
+</script>
+
+</body>
+</html>
